@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ListViewController.swift
 //  IOS Assessment
 //
 //  Created by Justin Edwards on 8/6/19.
@@ -9,7 +9,7 @@
 import UIKit
 //import PhoneNumberKit
 
-class ViewController: UITableViewController {
+class ListingViewController: UITableViewController {
    
 
     @IBOutlet var mTableView: UITableView!
@@ -21,16 +21,15 @@ class ViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
- tableView.register(UITableViewCell.classForCoder(), forCellReuseIdentifier: "listingTableViewCell")
-
     getRequest()
-        print("height", self.tableView.frame.height )
     }
+    
+   
+    
     override func numberOfSections(in tableView: UITableView) -> Int
     {
         
-        return listings.count
+        return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
@@ -50,8 +49,12 @@ class ViewController: UITableViewController {
        
         let dataListing = listings[indexPath.row]
         
+     
+        if dataListing.images?.firstPhoto.large == nil{
+            mTableView.scrollToRow(at: IndexPath(row: indexPath.row - 1, section: 0) , at: .none, animated: false)
+        }else{
         
-        cell.listingPhoto.load(urlString: dataListing.images.firstPhoto.small)
+        cell.listingPhoto.load(urlString: (dataListing.images?.firstPhoto.large)!)
         cell.listingYear_Label.text = String(dataListing.year)
         cell.listingYear_Label.font = UIFont.boldSystemFont(ofSize: 13)
         cell.listingMake_Label.text = dataListing.make
@@ -63,7 +66,8 @@ class ViewController: UITableViewController {
         cell.listingMileage_Label.text = dataListing.mileage.withCommas() + " Mi"
         cell.listingLocation_Label.text = dataListing.dealer.city + " , " + dataListing.dealer.state
         cell.phoneButton.setTitle(formatPhoneNumber(phoneNumber: dataListing.dealer.phone), for: UIControl.State.normal)
-        cell.phoneButton.addTarget(self, action: #selector(callNumber), for: UIControl.Event.touchUpInside)
+            cell.phoneButton.addTarget(self, action: #selector(callNumber), for: UIControl.Event.touchUpInside)
+        }
         return cell
     }
     
@@ -84,41 +88,33 @@ class ViewController: UITableViewController {
                     print(error?.localizedDescription ?? "Response Error")
                     return }
             do{
-                //here dataResponse received from a network request
-                let jsonResponse = try JSONSerialization.jsonObject(with:
-                    dataResponse) as? [String: Any]
                 
                 let decoder = try JSONDecoder()
                 let decodedListings = try decoder.decode(Listings.self, from: dataResponse)
-               // let decodedImages = try decoder.decode([Images].self, from: dataResponse)
                 self.listings = decodedListings.listings
-                print(self.listings.count)
-               // self.images = decodedListings.images.firstPhoto.large
-                
-                
-               
+           
                 DispatchQueue.main.async{
                 self.tableView.reloadData()
-                } //  print(jsonArray)
-                //print(jsonResponse) //Response result
-                //    let convertedString = String(data: dataResponse, encoding: String.Encoding.utf8) // the data will be converted to the string
-                //    print(convertedString ?? "defaultvalue")
+                }
             } catch let parsingError {
                 print("Error", parsingError)
             }
         }
         task.resume()
-     //   self.myTableView.beginUpdates()
+     
 }
     
     @IBAction func callNumber(_ sender: UIButton) {
         print("phone1",sender.titleLabel?.text)
-        guard let numberString = sender.titleLabel?.text, let phoneCallURL = URL(string: "telprompt://\(numberString)") else {
+        let phone_Number = sender.titleLabel?.text?.undoFormating()
+        guard let numberString = phone_Number , let phoneCallURL = URL(string: "telprompt://\(numberString)") else {
             return}
         print("phone2",phoneCallURL)
         UIApplication.shared.open(phoneCallURL)
     }
 
+   
+    
     func formatPhoneNumber(phoneNumber: String, shouldRemoveLastDigit: Bool = false) -> String {
         guard !phoneNumber.isEmpty else { return "" }
         guard let regex = try? NSRegularExpression(pattern: "[\\s-\\(\\)]", options: .caseInsensitive) else { return "" }
@@ -150,6 +146,7 @@ class ViewController: UITableViewController {
     }
     
 }
+
 extension Int {
     func withCommas() -> String {
         let numberFormatter = NumberFormatter()
@@ -158,7 +155,14 @@ extension Int {
     }
 }
 
-
+extension String {
+    func undoFormating()-> String{
+    let unFormattedPhone1 = self.replacingOccurrences(of: "(", with: "")
+    let unFormattedPhone2 = unFormattedPhone1.replacingOccurrences(of: ")", with: "")
+    let unFormattedPhone3 = unFormattedPhone2.replacingOccurrences(of: "-", with: "")
+    let unFormattedPhoneFinal = unFormattedPhone3.replacingOccurrences(of: " ", with: "")
+    print("uf",unFormattedPhoneFinal)
+    return unFormattedPhoneFinal }}
 
 extension UIImageView {
     func load(urlString: String) {
@@ -178,16 +182,13 @@ extension UIImageView {
                         }
                     }
                 }
-                //  print(jsonArray)
-                //print(jsonResponse) //Response result
-                //    let convertedString = String(data: dataResponse, encoding: String.Encoding.utf8) // the data will be converted to the string
-                //    print(convertedString ?? "defaultvalue")
+                
             } catch let parsingError {
                 print("Error", parsingError)
             }
         }
         task.resume()
-        //   self.myTableView.beginUpdates()
+       
     }
 }
 

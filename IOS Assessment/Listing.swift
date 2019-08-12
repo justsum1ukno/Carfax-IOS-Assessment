@@ -20,19 +20,19 @@ class Listings: Codable {
 
 class Listing: Codable {
   //  var photo: UIImage!
-    var images: Images!
-    var year: Int!
-     var make: String!
-     var model: String!
-     var trim: String!
-    var currentPrice: Int!
-    var mileage: Int!
-    var location: String!
-    var dealer: dealer!
+    var images: Images?
+    var year: Int
+     var make: String
+     var model: String
+     var trim: String
+    var currentPrice: Int
+    var mileage: Int
+    
+    var dealer: dealer
     
     
     
-    init( images: Images!,year: Int!, make: String!, model:String!, trim:String!, currentPrice:Int!, mileage:Int!, location : String!, dealer: dealer!){
+    init( images: Images?,year: Int, make: String, model:String, trim:String, currentPrice:Int, mileage:Int,  dealer: dealer){
         
       //  self.photo = photo
         self.images = images
@@ -42,7 +42,6 @@ class Listing: Codable {
         self.trim = trim
         self.currentPrice = currentPrice
         self.mileage = mileage
-        self.location = location
         self.dealer = dealer
        
         
@@ -51,26 +50,26 @@ class Listing: Codable {
 }
 
 class Images: Codable {
-    var firstPhoto: FirstPhoto!
-    init( firstPhoto: FirstPhoto!){
+    var firstPhoto: FirstPhoto
+    init( firstPhoto: FirstPhoto){
         self.firstPhoto = firstPhoto
     }}
 
 class FirstPhoto: Codable {
     //  var photo: UIImage!
-    var small: String!
+    var large: String
     
-    init( small: String!){
+    init( large: String){
         //  self.photo = photo
-        self.small = small
+        self.large = large
     }}
 
 
 class dealer: Codable {
-    var city: String!
-    var state: String!
-    var phone: String!
-    init( city: String!, state: String!, phone:String!){
+    var city: String
+    var state: String
+    var phone: String
+    init( city: String, state: String, phone:String){
         self.city = city
         self.state = state
         self.phone = phone
