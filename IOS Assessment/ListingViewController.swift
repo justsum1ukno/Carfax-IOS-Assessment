@@ -7,7 +7,6 @@
 //
 
 import UIKit
-//import PhoneNumberKit
 
 class ListingViewController: UITableViewController {
    
@@ -28,15 +27,12 @@ class ListingViewController: UITableViewController {
     
     override func numberOfSections(in tableView: UITableView) -> Int
     {
-        
         return 1
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
-        
         return listings.count
-        
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
@@ -53,7 +49,6 @@ class ListingViewController: UITableViewController {
         if dataListing.images?.firstPhoto.large == nil{
             mTableView.scrollToRow(at: IndexPath(row: indexPath.row - 1, section: 0) , at: .none, animated: false)
         }else{
-        
         cell.listingPhoto.load(urlString: (dataListing.images?.firstPhoto.large)!)
         cell.listingYear_Label.text = String(dataListing.year)
         cell.listingYear_Label.font = UIFont.boldSystemFont(ofSize: 13)

@@ -19,7 +19,6 @@ class Listings: Codable {
 }
 
 class Listing: Codable {
-  //  var photo: UIImage!
     var images: Images?
     var year: Int
      var make: String
@@ -27,14 +26,11 @@ class Listing: Codable {
      var trim: String
     var currentPrice: Int
     var mileage: Int
-    
     var dealer: dealer
     
     
     
     init( images: Images?,year: Int, make: String, model:String, trim:String, currentPrice:Int, mileage:Int,  dealer: dealer){
-        
-      //  self.photo = photo
         self.images = images
         self.year = year
         self.make = make
@@ -56,11 +52,9 @@ class Images: Codable {
     }}
 
 class FirstPhoto: Codable {
-    //  var photo: UIImage!
     var large: String
     
     init( large: String){
-        //  self.photo = photo
         self.large = large
     }}
 
